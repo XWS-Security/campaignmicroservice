@@ -1,4 +1,4 @@
-package com.example.campaignmicroservice;
+package org.nistagram.campaignmicroservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
