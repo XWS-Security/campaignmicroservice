@@ -62,17 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 // Set permissions on endpoints
                 .authorizeRequests()
-                .antMatchers("/profile/**").permitAll()
-                .antMatchers("/image/**").permitAll()
-                .antMatchers("/develop/").permitAll()
-                .antMatchers("/story/**").permitAll()
-                .antMatchers("/search/**").permitAll()
-                .antMatchers("/post/**").permitAll()
-                .antMatchers("/interaction/**").permitAll()
-                .antMatchers("/favourites/**").permitAll()
-                .antMatchers("/subscribe/**").permitAll()
-                .antMatchers("/post/uploadContent").hasAuthority("NISTAGRAM_USER_ROLE")
-                .antMatchers("/profile/updateUser").hasAuthority("NISTAGRAM_USER_ROLE")
+                .antMatchers("/campaign/**").permitAll()
                 .anyRequest().authenticated().and()
                 // Add JWT token filter
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),

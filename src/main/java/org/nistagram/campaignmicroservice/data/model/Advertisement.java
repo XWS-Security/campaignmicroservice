@@ -20,6 +20,11 @@ public class Advertisement {
     public Advertisement() {
     }
 
+    public Advertisement(Long contentId, String link) {
+        this.contentId = contentId;
+        this.link = link;
+    }
+
     public Long getId() {
         return id;
     }
