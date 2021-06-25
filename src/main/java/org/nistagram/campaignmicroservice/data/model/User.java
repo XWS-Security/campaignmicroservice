@@ -9,10 +9,10 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "nistagram_user")
+@Table(name = "nistagram_user")/*
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class User implements UserDetails {
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)*/
+public class User implements UserDetails {
 
     private final transient String administrationRole = "NISTAGRAM_USER_ROLE";
 

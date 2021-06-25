@@ -1,10 +1,12 @@
 package org.nistagram.campaignmicroservice.data.model;
 
+import org.nistagram.campaignmicroservice.data.enums.Gender;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("ONE_TIME_CAMPAIGN")
@@ -14,6 +16,11 @@ public class OneTimeCampaign extends Campaign {
     private Date exposureDate;
 
     public OneTimeCampaign() {
+    }
+
+    public OneTimeCampaign(Long agentAccountId, boolean deleted, Gender gender, Integer maxAge, Integer minAge, List<HireRequest> hireRequests, Advertisement advertisement, Date exposureDate) {
+        super(agentAccountId, deleted, gender, maxAge, minAge, hireRequests, advertisement);
+        this.exposureDate = exposureDate;
     }
 
     public Date getExposureDate() {
