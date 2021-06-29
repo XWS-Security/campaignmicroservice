@@ -1,6 +1,7 @@
 package org.nistagram.campaignmicroservice.controller;
 
 import org.nistagram.campaignmicroservice.data.dto.CampaignDto;
+import org.nistagram.campaignmicroservice.exceptions.CampaignUpdatedBefore24H;
 import org.nistagram.campaignmicroservice.service.ICampaignService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,7 +36,10 @@ public class CampaignController {
         try {
             campaignService.update(campaignDto);
             return new ResponseEntity<>("Campaign updated successfully!", HttpStatus.OK);
-        } catch (Exception e) {
+        }catch (CampaignUpdatedBefore24H e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
             return new ResponseEntity<>("Campaign couldn't be updated!", HttpStatus.BAD_REQUEST);
         }
     }
