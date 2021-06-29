@@ -5,12 +5,14 @@ import org.nistagram.campaignmicroservice.data.model.*;
 import org.nistagram.campaignmicroservice.data.repository.AdvertisementRepository;
 import org.nistagram.campaignmicroservice.data.repository.CampaignRepository;
 import org.nistagram.campaignmicroservice.data.repository.ContinuousCampaignRepository;
+import org.nistagram.campaignmicroservice.exceptions.CampaignUpdatedBefore24H;
 import org.nistagram.campaignmicroservice.exceptions.NotFoundException;
 import org.nistagram.campaignmicroservice.service.ICampaignService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -54,7 +56,12 @@ public class CampaignServiceImpl implements ICampaignService {
             throw new NotFoundException();
         }
         var campaign = campaignOptional.get();
-
+        var date = new Date();
+        date.setTime(date.getTime()-ContinuousCampaign.TWENTY_FOUR_HOURS);
+        if(!campaign.getLastUpdate().toInstant().isBefore(date.toInstant())){
+            throw new CampaignUpdatedBefore24H();
+        }
+        campaign.setLastUpdate(new Date());
         campaign.setMaxAge(dto.getMaxAge());
         campaign.setMinAge(dto.getMinAge());
         campaign.setGender(dto.getGender());

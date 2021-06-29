@@ -24,6 +24,8 @@ public class ContinuousCampaign extends Campaign {
     @Column(name = "lastUpdate")
     private Date lastUpdate;
 
+    public static final int TWENTY_FOUR_HOURS = 86400000;
+
     public ContinuousCampaign() {
     }
 
@@ -32,7 +34,9 @@ public class ContinuousCampaign extends Campaign {
         this.exposureStart = exposureStart;
         this.exposureEnd = exposureEnd;
         this.requiredDailyDisplays = requiredDailyDisplays;
-        this.lastUpdate = new Date();
+        var date = new Date();
+        date.setTime(date.getTime()- TWENTY_FOUR_HOURS -1);
+        this.lastUpdate = date;
     }
 
     public Date getExposureStart() {
