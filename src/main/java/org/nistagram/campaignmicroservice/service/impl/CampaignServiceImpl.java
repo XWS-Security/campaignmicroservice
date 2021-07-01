@@ -103,6 +103,33 @@ public class CampaignServiceImpl implements ICampaignService {
         return dtos;
     }
 
+    @Override
+    public List<CampaignDto> getAll() {
+        var user = getCurrentlyLoggedUser();
+        var campaigns = campaignRepository.findAllByAgentAccountId(user.getId());
+        List<CampaignDto> dtos = new ArrayList<>();
+
+        campaigns.forEach(campaign -> {
+            if(!campaign.isDeleted()){
+                var advert = campaign.getAdvertisement();
+                var dto = new CampaignDto( campaign.getId(), campaign.getMaxAge(), campaign.getMinAge(), campaign.getGender(), advert.getContentId(), advert.getLink());
+
+                if(campaign instanceof ContinuousCampaign){
+                    dto.setExposureEnd(((ContinuousCampaign) campaign).getExposureEnd());
+                    dto.setExposureStart(((ContinuousCampaign) campaign).getExposureStart());
+                    dto.setRequiredDailyDisplays(((ContinuousCampaign) campaign).getRequiredDailyDisplays());
+                    dto.setOneTime(false);
+                }
+                else {
+                    dto.setOneTime(true);
+                    dto.setExposureDate(((OneTimeCampaign) campaign).getExposureDate());
+                }
+                dtos.add(dto);
+            }
+        });
+        return dtos;
+    }
+
     private User getCurrentlyLoggedUser() {
         var object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (object instanceof User) {

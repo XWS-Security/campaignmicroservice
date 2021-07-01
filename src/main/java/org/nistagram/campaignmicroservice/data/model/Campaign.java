@@ -3,6 +3,7 @@ package org.nistagram.campaignmicroservice.data.model;
 import org.nistagram.campaignmicroservice.data.enums.Gender;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,7 +36,7 @@ public abstract class Campaign {
     }
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "hire_request_id")
+    @JoinColumn(name = "campaign_id")
     private List<HireRequest> hireRequests;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -122,5 +123,12 @@ public abstract class Campaign {
 
     public void setHireRequests(List<HireRequest> hireRequests) {
         this.hireRequests = hireRequests;
+    }
+
+    public void addHireRequest(HireRequest hireRequest){
+        if(hireRequests==null){
+            hireRequests = new ArrayList<>();
+        }
+        hireRequests.add(hireRequest);
     }
 }
