@@ -12,4 +12,6 @@ public interface ICampaignService {
     void delete(Long id);
 
     List<CampaignDto> getAllContinuous();
+
+    List<CampaignDto> getAll();
 }

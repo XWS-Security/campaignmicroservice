@@ -14,13 +14,18 @@ public class HireRequest {
     @Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "influencer_id")
-    private Long influencerId;
+    @Column(name = "influencer_username")
+    private String influencerUsername;
 
     @Column(name = "approval_status")
     private ApprovalStatus approvalStatus;
 
     public HireRequest() {
+    }
+
+    public HireRequest(String influencerUsername, ApprovalStatus approvalStatus) {
+        this.influencerUsername = influencerUsername;
+        this.approvalStatus = approvalStatus;
     }
 
     public Long getId() {
@@ -31,12 +36,12 @@ public class HireRequest {
         this.id = id;
     }
 
-    public Long getInfluencerId() {
-        return influencerId;
+    public String getInfluencerUsername() {
+        return influencerUsername;
     }
 
-    public void setInfluencerId(Long influencerId) {
-        this.influencerId = influencerId;
+    public void setInfluencerUsername(String influencerUsername) {
+        this.influencerUsername = influencerUsername;
     }
 
     public ApprovalStatus getApprovalStatus() {
@@ -47,11 +52,9 @@ public class HireRequest {
         this.approvalStatus = approvalStatus;
     }
 
-    //TODO: different logic?
     public void approve(){
         this.approvalStatus=ApprovalStatus.APPROVED;
     }
-
 
     public void reject(){
         this.approvalStatus=ApprovalStatus.REJECTED;

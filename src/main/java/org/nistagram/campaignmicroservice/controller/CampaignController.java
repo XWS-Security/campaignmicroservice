@@ -54,6 +54,17 @@ public class CampaignController {
         }
     }
 
+    @GetMapping(path = "/")
+    public ResponseEntity<List<CampaignDto>> getAll() {
+        try {
+            List<CampaignDto> dtos = campaignService.getAll();
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         try {

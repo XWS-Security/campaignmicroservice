@@ -45,6 +45,7 @@ public class CampaignDto implements Serializable {
         this.link = link;
     }
 
+
     public Long getId() {
         return id;
     }
