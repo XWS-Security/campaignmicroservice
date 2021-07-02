@@ -60,7 +60,6 @@ public class CampaignController {
             List<CampaignDto> dtos = campaignService.getAll();
             return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

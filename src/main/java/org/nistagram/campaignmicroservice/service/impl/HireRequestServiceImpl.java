@@ -1,6 +1,7 @@
 package org.nistagram.campaignmicroservice.service.impl;
 
 import org.nistagram.campaignmicroservice.data.dto.HireRequestDto;
+import org.nistagram.campaignmicroservice.data.enums.ApprovalStatus;
 import org.nistagram.campaignmicroservice.data.model.HireRequest;
 import org.nistagram.campaignmicroservice.data.repository.CampaignRepository;
 import org.nistagram.campaignmicroservice.data.repository.HireRequestRepository;
@@ -20,7 +21,7 @@ public class HireRequestServiceImpl implements IHireRequestService {
 
     @Override
     public void create(HireRequestDto dto) {
-        var hireRequest = new HireRequest(dto.getInfluencerUsername(),dto.getApprovalStatus());
+        var hireRequest = new HireRequest(dto.getInfluencerUsername(), ApprovalStatus.WAITING);
         hireRequestRepository.save(hireRequest);
         var optionalCampaign = campaignRepository.findById(dto.getCampaignId());
         if(optionalCampaign.isEmpty()){
