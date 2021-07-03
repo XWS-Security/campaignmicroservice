@@ -18,8 +18,8 @@ public class OneTimeCampaign extends Campaign {
     public OneTimeCampaign() {
     }
 
-    public OneTimeCampaign(Long agentAccountId, boolean deleted, Gender gender, Integer maxAge, Integer minAge, List<HireRequest> hireRequests, Advertisement advertisement, Date exposureDate) {
-        super(agentAccountId, deleted, gender, maxAge, minAge, hireRequests, advertisement);
+    public OneTimeCampaign(String agentAccountUsername, boolean deleted, Gender gender, Integer maxAge, Integer minAge, List<HireRequest> hireRequests, Advertisement advertisement, Date exposureDate) {
+        super(agentAccountUsername, deleted, gender, maxAge, minAge, hireRequests, advertisement);
         this.exposureDate = exposureDate;
     }
 

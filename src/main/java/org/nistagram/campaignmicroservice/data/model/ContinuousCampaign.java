@@ -29,8 +29,8 @@ public class ContinuousCampaign extends Campaign {
     public ContinuousCampaign() {
     }
 
-    public ContinuousCampaign(Long agentAccountId, boolean deleted, Gender gender, Integer maxAge, Integer minAge, List<HireRequest> hireRequests, Advertisement advertisement, Date exposureStart, Date exposureEnd, int requiredDailyDisplays) {
-        super(agentAccountId, deleted, gender, maxAge, minAge, hireRequests, advertisement);
+    public ContinuousCampaign(String agentAccountUsername, boolean deleted, Gender gender, Integer maxAge, Integer minAge, List<HireRequest> hireRequests, Advertisement advertisement, Date exposureStart, Date exposureEnd, int requiredDailyDisplays) {
+        super(agentAccountUsername, deleted, gender, maxAge, minAge, hireRequests, advertisement);
         this.exposureStart = exposureStart;
         this.exposureEnd = exposureEnd;
         this.requiredDailyDisplays = requiredDailyDisplays;

@@ -32,18 +32,20 @@ public class CampaignServiceImpl implements ICampaignService {
     public void create(CampaignDto dto) {
 
         var advertisement = new Advertisement(dto.getContentId(), dto.getLink()) ;
-        var agent = getCurrentlyLoggedUser();
+        var agent =  CurrentlyLoggedUserService.getCurrentlyLoggedUser();
         assert agent != null;
         if(dto.isOneTime()){
 
-            var oneTimeCampaign = new OneTimeCampaign(agent.getId(),false,dto.getGender(), dto.getMaxAge(),dto.getMinAge()
+            var oneTimeCampaign = new OneTimeCampaign(agent.getUsername(),false,dto.getGender(), dto.getMaxAge(),dto.getMinAge()
                     ,new ArrayList<>(), advertisement, dto.getExposureDate());
+            oneTimeCampaign.setAgentAccountUsername(agent.getUsername());
             advertisementRepository.save(advertisement);
             campaignRepository.save(oneTimeCampaign);
         }
         else{
-            var continuousCampaign = new ContinuousCampaign(agent.getId(),false,dto.getGender(), dto.getMaxAge(),dto.getMinAge()
+            var continuousCampaign = new ContinuousCampaign(agent.getUsername(),false,dto.getGender(), dto.getMaxAge(),dto.getMinAge()
                     ,new ArrayList<>(), advertisement, dto.getExposureStart(), dto.getExposureEnd(), dto.getRequiredDailyDisplays());
+            continuousCampaign.setAgentAccountUsername(agent.getUsername());
             advertisementRepository.save(advertisement);
             campaignRepository.save(continuousCampaign);
         }
@@ -85,8 +87,8 @@ public class CampaignServiceImpl implements ICampaignService {
 
     @Override
     public List<CampaignDto> getAllContinuous() {
-        var user = getCurrentlyLoggedUser();
-        var campaigns = continuousCampaignRepository.findAllByAgentAccountId(user.getId());
+        var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
+        var campaigns = continuousCampaignRepository.findAllByAgentAccountUsername(user.getUsername());
         List<CampaignDto> dtos = new ArrayList<>();
 
         campaigns.forEach(campaign -> {
@@ -105,8 +107,8 @@ public class CampaignServiceImpl implements ICampaignService {
 
     @Override
     public List<CampaignDto> getAll() {
-        var user = getCurrentlyLoggedUser();
-        var campaigns = campaignRepository.findAllByAgentAccountId(user.getId());
+        var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
+        var campaigns = campaignRepository.findAllByAgentAccountUsername(user.getUsername());
         List<CampaignDto> dtos = new ArrayList<>();
 
         campaigns.forEach(campaign -> {
@@ -128,13 +130,5 @@ public class CampaignServiceImpl implements ICampaignService {
             }
         });
         return dtos;
-    }
-
-    private User getCurrentlyLoggedUser() {
-        var object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (object instanceof User) {
-            return (User) object;
-        }
-        return null;
     }
 }
