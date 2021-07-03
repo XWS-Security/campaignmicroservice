@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ContinuousCampaignRepository extends CrudRepository<ContinuousCampaign, Long> {
-    List<ContinuousCampaign> findAllByAgentAccountId(Long id);
+    List<ContinuousCampaign> findAllByAgentAccountUsername(String id);
 }

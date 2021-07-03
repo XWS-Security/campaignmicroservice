@@ -17,8 +17,8 @@ public abstract class Campaign {
     @Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "agent_account_id")
-    private Long agentAccountId;
+    @Column(name = "agent_account_username")
+    private String agentAccountUsername;
 
     @Column(name = "deleted")
     private boolean deleted;
@@ -43,8 +43,8 @@ public abstract class Campaign {
     @JoinColumn(name = "advertisement_id")
     private Advertisement advertisement;
 
-    public Campaign(Long agentAccountId, boolean deleted, Gender gender, Integer maxAge, Integer minAge, List<HireRequest> hireRequests, Advertisement advertisement) {
-        this.agentAccountId = agentAccountId;
+    public Campaign(String agentAccountUsername, boolean deleted, Gender gender, Integer maxAge, Integer minAge, List<HireRequest> hireRequests, Advertisement advertisement) {
+        this.agentAccountUsername = agentAccountUsername;
         this.deleted = deleted;
         this.gender = gender;
         this.maxAge = maxAge;
@@ -61,12 +61,12 @@ public abstract class Campaign {
         this.id = id;
     }
 
-    public Long getAgentAccountId() {
-        return agentAccountId;
+    public String getAgentAccountUsername() {
+        return agentAccountUsername;
     }
 
-    public void setAgentAccountId(Long agentAccountId) {
-        this.agentAccountId = agentAccountId;
+    public void setAgentAccountUsername(String agentAccountUsername) {
+        this.agentAccountUsername = agentAccountUsername;
     }
 
     public List<HireRequest> getHireRequest() {
