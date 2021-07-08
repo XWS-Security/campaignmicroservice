@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ContinuousCampaignRepository extends CrudRepository<ContinuousCampaign, Long> {
     List<ContinuousCampaign> findAllByAgentAccountUsername(String id);
+    List<ContinuousCampaign> findAllByDeletedFalseAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqual(Integer age1, Integer age2);
 }

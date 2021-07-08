@@ -8,10 +8,10 @@ import org.nistagram.campaignmicroservice.data.repository.ContinuousCampaignRepo
 import org.nistagram.campaignmicroservice.exceptions.CampaignUpdatedBefore24H;
 import org.nistagram.campaignmicroservice.exceptions.NotFoundException;
 import org.nistagram.campaignmicroservice.service.ICampaignService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,14 +30,16 @@ public class CampaignServiceImpl implements ICampaignService {
 
     @Override
     public void create(CampaignDto dto) {
-
-        var advertisement = new Advertisement(dto.getContentId(), dto.getLink()) ;
+        var advertisement = new Advertisement(dto.getContentId(), dto.getLink(), dto.isPost()) ;
         var agent =  CurrentlyLoggedUserService.getCurrentlyLoggedUser();
         assert agent != null;
         if(dto.isOneTime()){
-
+            var exposureDateCalendar = Calendar.getInstance();
+            final int javascriptHourDifference = 2;
+            exposureDateCalendar.setTime(dto.getExposureDate());
+            exposureDateCalendar.set(Calendar.HOUR_OF_DAY, exposureDateCalendar.get(Calendar.HOUR_OF_DAY) - javascriptHourDifference);
             var oneTimeCampaign = new OneTimeCampaign(agent.getUsername(),false,dto.getGender(), dto.getMaxAge(),dto.getMinAge()
-                    ,new ArrayList<>(), advertisement, dto.getExposureDate());
+                    ,new ArrayList<>(), advertisement, exposureDateCalendar.getTime());
             oneTimeCampaign.setAgentAccountUsername(agent.getUsername());
             advertisementRepository.save(advertisement);
             campaignRepository.save(oneTimeCampaign);
