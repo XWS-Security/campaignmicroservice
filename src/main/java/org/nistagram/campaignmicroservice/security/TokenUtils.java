@@ -2,7 +2,6 @@ package org.nistagram.campaignmicroservice.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.nistagram.campaignmicroservice.data.model.User;
 import org.nistagram.campaignmicroservice.logging.LoggerService;
 import org.nistagram.campaignmicroservice.logging.LoggerServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 @Component
 public class TokenUtils {
@@ -24,12 +22,8 @@ public class TokenUtils {
     private final LoggerService loggerService = new LoggerServiceImpl(this.getClass());
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        User user = (User) userDetails;
-        System.out.println(user.getAdministrationRole() + user.getUsername());
         final String username = getUsernameFromToken(token);
-        final Date created = getIssuedAtDateFromToken(token);
-        return (username != null && username.equals(userDetails.getUsername())) &&
-                !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate());
+        return (username != null && username.equals(userDetails.getUsername()));
     }
 
     public String getUsernameFromToken(String token) {
@@ -41,17 +35,6 @@ public class TokenUtils {
             username = null;
         }
         return username;
-    }
-
-    public Date getIssuedAtDateFromToken(String token) {
-        Date issueAt;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
-            issueAt = claims.getIssuedAt();
-        } catch (Exception e) {
-            issueAt = null;
-        }
-        return issueAt;
     }
 
     public String getToken(HttpServletRequest request) {
@@ -66,10 +49,6 @@ public class TokenUtils {
 
     public String getAuthHeaderFromHeader(HttpServletRequest request) {
         return request.getHeader(AUTH_HEADER);
-    }
-
-    private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-        return (lastPasswordReset != null && created.before(lastPasswordReset));
     }
 
     private Claims getAllClaimsFromToken(String token) {
