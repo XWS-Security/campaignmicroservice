@@ -14,15 +14,19 @@ public class Advertisement {
     @Column(name = "content_id")
     private Long contentId;
 
+    @Column(name = "post")
+    private boolean post;
+
     @Column(name = "link")
     private String link;
 
     public Advertisement() {
     }
 
-    public Advertisement(Long contentId, String link) {
+    public Advertisement(Long contentId, String link, boolean post) {
         this.contentId = contentId;
         this.link = link;
+        this.post = post;
     }
 
     public Long getId() {
@@ -47,5 +51,13 @@ public class Advertisement {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public boolean isPost() {
+        return post;
+    }
+
+    public void setPost(boolean post) {
+        this.post = post;
     }
 }

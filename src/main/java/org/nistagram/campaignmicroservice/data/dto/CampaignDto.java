@@ -17,6 +17,7 @@ public class CampaignDto implements Serializable {
     private Date exposureEnd;
     private int requiredDailyDisplays;
     private Date exposureDate;
+    private boolean post;
     private boolean oneTime;
 
     public CampaignDto() {
@@ -132,5 +133,13 @@ public class CampaignDto implements Serializable {
 
     public void setOneTime(boolean oneTime) {
         this.oneTime = oneTime;
+    }
+
+    public boolean isPost() {
+        return post;
+    }
+
+    public void setPost(boolean post) {
+        this.post = post;
     }
 }
