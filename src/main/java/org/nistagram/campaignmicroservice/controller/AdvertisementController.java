@@ -58,4 +58,26 @@ public class AdvertisementController {
         }
     }
 
+    @GetMapping(path = "/continuous/profile/{agentUsername}")
+    public ResponseEntity<List<AdvertisementDto>> getContinuousPostAdvertisementsOfAgent(HttpServletRequest request, @PathVariable String agentUsername){
+        try {
+            List<AdvertisementDto> dtos = advertisementService.getContinuousPostAdvertisementsOfAgent(agentUsername,tokenUtils.getToken(request));
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(path = "/onetime/profile")
+    public ResponseEntity<List<AdvertisementDto>> getOneTimePostAdvertisementsOfAgent(@RequestBody AdvertisementDto advertisementDto,HttpServletRequest request){
+        try {
+            List<AdvertisementDto> dtos = advertisementService.getOneTimePostAdvertisementsOfAgent(advertisementDto,tokenUtils.getToken(request));
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

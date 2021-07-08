@@ -11,4 +11,8 @@ public interface IAdvertisementService {
     void see(Long id);
 
     List<AdvertisementDto> getUsersContinuousAdvertisements(String token) throws SSLException;
+
+    List<AdvertisementDto> getContinuousPostAdvertisementsOfAgent(String agentUsername, String token) throws SSLException;
+
+    List<AdvertisementDto> getOneTimePostAdvertisementsOfAgent(AdvertisementDto advertisementDto, String token) throws SSLException;
 }
