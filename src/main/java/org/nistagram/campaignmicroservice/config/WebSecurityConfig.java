@@ -62,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 // Set permissions on endpoints
                 .authorizeRequests()
+                .antMatchers("/users/**").permitAll()
                 .antMatchers("/campaign/**").permitAll()
                 .anyRequest().authenticated().and()
                 // Add JWT token filter

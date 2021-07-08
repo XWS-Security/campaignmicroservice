@@ -6,14 +6,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "nistagram_user")/*
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)*/
+@Table(name = "nistagram_user")
 public class User implements UserDetails {
-
     private final transient String administrationRole = "NISTAGRAM_USER_ROLE";
 
     @Id
@@ -26,10 +26,10 @@ public class User implements UserDetails {
     private String username;
 
     @Column(name = "enabled")
-    private boolean enabled = false;
+    private boolean enabled = true;
 
-    @Column(name = "last_password_reset_date")
-    private Date lastPasswordResetDate;
+    @Column(name = "profile_private")
+    private boolean profilePrivate = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -75,16 +75,16 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public boolean isProfilePrivate() {
+        return profilePrivate;
+    }
+
+    public void setProfilePrivate(boolean profilePrivate) {
+        this.profilePrivate = profilePrivate;
+    }
+
     public String getAdministrationRole() {
         return this.administrationRole;
-    }
-
-    public Date getLastPasswordResetDate() {
-        return lastPasswordResetDate;
-    }
-
-    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
-        this.lastPasswordResetDate = lastPasswordResetDate;
     }
 
     @JsonIgnore
