@@ -1,5 +1,6 @@
 package org.nistagram.campaignmicroservice.service.impl;
 
+import org.nistagram.campaignmicroservice.data.dto.CreateTokenOwnerDto;
 import org.nistagram.campaignmicroservice.data.dto.EditUserDto;
 import org.nistagram.campaignmicroservice.data.model.Role;
 import org.nistagram.campaignmicroservice.data.model.User;
@@ -52,6 +53,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    @Override
+    public void saveTokenOwner(CreateTokenOwnerDto tokenOwnerDto) {
+        User agent = userRepository.findByUsername(tokenOwnerDto.getAgentUsername());
+        User tokenOwner = new User();
+        tokenOwner.setUsername(tokenOwnerDto.getUsername());
+        tokenOwner.setProfilePrivate(agent.isProfilePrivate());
+        tokenOwner.setRoles(roleRepository.findByName(tokenOwner.getAdministrationRole()));
+        tokenOwner.setEnabled(true);
+        tokenOwner.setConnectedAgentAccount(agent);
+        userRepository.save(tokenOwner);
     }
 
     private boolean isUsernameAvailable(String username) {

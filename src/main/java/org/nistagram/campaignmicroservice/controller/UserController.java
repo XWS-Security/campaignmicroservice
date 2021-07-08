@@ -1,6 +1,7 @@
 package org.nistagram.campaignmicroservice.controller;
 
 import org.modelmapper.ModelMapper;
+import org.nistagram.campaignmicroservice.data.dto.CreateTokenOwnerDto;
 import org.nistagram.campaignmicroservice.data.dto.EditUserDto;
 import org.nistagram.campaignmicroservice.data.dto.ResponseDto;
 import org.nistagram.campaignmicroservice.data.dto.UserDto;
@@ -60,6 +61,20 @@ public class UserController {
             return new ResponseEntity<>(new ResponseDto(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(new ResponseDto(false, "Something went wrong."), HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/token/")
+    public ResponseEntity<ResponseDto> createTokenOwner(@RequestBody CreateTokenOwnerDto userDto) {
+        try {
+            userService.saveTokenOwner(userDto);
+            return new ResponseEntity<>(new ResponseDto(true, ""), HttpStatus.OK);
+        } catch (UsernameAlreadyExistsException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ResponseDto(false, e.getMessage()), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ResponseDto(false, "Something went wrong."), HttpStatus.BAD_REQUEST);
         }
     }
 }

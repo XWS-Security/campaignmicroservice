@@ -31,13 +31,17 @@ public class User implements UserDetails {
     @Column(name = "profile_private")
     private boolean profilePrivate = false;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "connected_agent_id", referencedColumnName = "id")
+    private User connectedAgentAccount;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
-    protected User() {
+    public User() {
         this.roles = new ArrayList<>();
     }
 
@@ -81,6 +85,14 @@ public class User implements UserDetails {
 
     public void setProfilePrivate(boolean profilePrivate) {
         this.profilePrivate = profilePrivate;
+    }
+
+    public User getConnectedAgentAccount() {
+        return connectedAgentAccount;
+    }
+
+    public void setConnectedAgentAccount(User connectedAgentAccount) {
+        this.connectedAgentAccount = connectedAgentAccount;
     }
 
     public String getAdministrationRole() {
