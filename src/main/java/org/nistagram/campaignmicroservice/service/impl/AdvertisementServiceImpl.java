@@ -7,6 +7,7 @@ import org.nistagram.campaignmicroservice.data.dto.AdvertisementDto;
 import org.nistagram.campaignmicroservice.data.dto.BasicUserInfoDto;
 import org.nistagram.campaignmicroservice.data.dto.FollowingStatusDto;
 import org.nistagram.campaignmicroservice.data.enums.Gender;
+import org.nistagram.campaignmicroservice.data.model.Advertisement;
 import org.nistagram.campaignmicroservice.data.model.AdvertisementView;
 import org.nistagram.campaignmicroservice.data.model.Campaign;
 import org.nistagram.campaignmicroservice.data.repository.AdvertisementViewRepository;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdvertisementServiceImpl implements IAdvertisementService {
@@ -105,6 +107,20 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
                 e.printStackTrace();
             }
         });
+        return dtos;
+    }
+
+    @Override
+    public List<AdvertisementDto> getContinuousPostAdvertisementsOfAgent(String agentUsername, String token) throws SSLException {
+        var dtos = getUsersContinuousAdvertisements(token);
+        dtos = dtos.stream().filter(advertisementDto -> advertisementDto.getAgentAccountUsername().equals(agentUsername)).collect(Collectors.toList());
+        return dtos;
+    }
+
+    @Override
+    public List<AdvertisementDto> getOneTimePostAdvertisementsOfAgent(AdvertisementDto advertisementDto, String token) throws SSLException {
+        var dtos = getUsersOneTimeAdvertisements(advertisementDto, token);
+        dtos = dtos.stream().filter(dto -> dto.getAgentAccountUsername().equals(advertisementDto.getAgentAccountUsername())).collect(Collectors.toList());
         return dtos;
     }
 
