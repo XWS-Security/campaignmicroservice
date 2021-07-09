@@ -70,10 +70,8 @@ public class UserController {
             userService.saveTokenOwner(userDto);
             return new ResponseEntity<>(new ResponseDto(true, ""), HttpStatus.OK);
         } catch (UsernameAlreadyExistsException e) {
-            e.printStackTrace();
             return new ResponseEntity<>(new ResponseDto(false, e.getMessage()), HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>(new ResponseDto(false, "Something went wrong."), HttpStatus.BAD_REQUEST);
         }
     }
