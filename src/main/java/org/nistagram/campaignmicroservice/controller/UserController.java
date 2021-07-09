@@ -41,6 +41,18 @@ public class UserController {
         }
     }
 
+    @PostMapping("/agent/")
+    public ResponseEntity<ResponseDto> createAgent(@RequestBody @Valid UserDto userDto) {
+        try {
+            userService.saveAgent(modelMapper.map(userDto, User.class));
+            return new ResponseEntity<>(new ResponseDto(true, ""), HttpStatus.OK);
+        } catch (UsernameAlreadyExistsException e) {
+            return new ResponseEntity<>(new ResponseDto(false, e.getMessage()), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResponseDto(false, "Something went wrong."), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestBody @Valid UserDto userDto) {
         try {
@@ -52,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/")
-    @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
+    @PreAuthorize("hasAuthority('AGENT_ROLE')")
     public ResponseEntity<ResponseDto> updateUser(@RequestBody @Valid EditUserDto editUserDto) {
         try {
             userService.updateUser(editUserDto);

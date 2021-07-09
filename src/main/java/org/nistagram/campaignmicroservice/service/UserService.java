@@ -7,6 +7,8 @@ import org.nistagram.campaignmicroservice.data.model.User;
 public interface UserService {
     void saveUser(User user);
 
+    void saveAgent(User user);
+
     void updateUser(EditUserDto editUserDto);
 
     void deleteUser(User user);

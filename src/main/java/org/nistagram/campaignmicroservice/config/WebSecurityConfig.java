@@ -64,6 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/campaign/**").permitAll()
+                .antMatchers("/advertisement/**").permitAll()
+                .antMatchers("/hireRequest/**").permitAll()
                 .anyRequest().authenticated().and()
                 // Add JWT token filter
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
