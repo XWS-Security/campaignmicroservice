@@ -22,7 +22,7 @@ public class AgentReportController {
     }
 
     @GetMapping(path = "/")
-    @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
+    @PreAuthorize("hasAuthority('AGENT_ROLE')")
     public ResponseEntity<List<GetAgentReportResponse>> getCampaignStats() {
         try {
             var result = campaignStatsService.generate();
