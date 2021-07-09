@@ -134,7 +134,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
             var advertisement = continuousCampaign.getAdvertisement();
             try {
                 var followingStatus = getFollowingStatus(influencerUsername, token);
-                if (isApprovedByInfluencer(continuousCampaign.getId(), influencerUsername) && followingStatus.getFollowing().equals("FOLLOWING") && !followingStatus.isMuted() && advertisement.isPost() && betweenDates(continuousCampaign.getExposureStart(), continuousCampaign.getExposureEnd()) && areGenderEqual(userInfo, continuousCampaign))
+                if (isApprovedByInfluencer(continuousCampaign.getId(), influencerUsername) && followingStatus.getFollowing().equals("FOLLOWING") && advertisement.isPost() && betweenDates(continuousCampaign.getExposureStart(), continuousCampaign.getExposureEnd()) && areGenderEqual(userInfo, continuousCampaign))
                     dtos.add(new AdvertisementDto(null, advertisement.getContentId(), advertisement.getLink(), continuousCampaign.getAgentAccountUsername(), continuousCampaign.getId()));
             } catch (SSLException e) {
                 e.printStackTrace();
@@ -162,7 +162,103 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
             var advertisement = oneTimeCampaign.getAdvertisement();
             try {
                 var followingStatus = getFollowingStatus(influencerUsername, token);
-                if (isApprovedByInfluencer(oneTimeCampaign.getId(), influencerUsername) && followingStatus.getFollowing().equals("FOLLOWING") && !followingStatus.isMuted() && advertisement.isPost() && views.size() == 0 && isEqualDateInMinutesPrecision(currentMoment, exposureDate) && areGenderEqual(userInfo, oneTimeCampaign))
+                if (isApprovedByInfluencer(oneTimeCampaign.getId(), influencerUsername) && followingStatus.getFollowing().equals("FOLLOWING") && advertisement.isPost() && views.size() == 0 && isEqualDateInMinutesPrecision(currentMoment, exposureDate) && areGenderEqual(userInfo, oneTimeCampaign))
+                    dtos.add(new AdvertisementDto(advertisementDto.getCurrentMoment(), advertisement.getContentId(), advertisement.getLink(), oneTimeCampaign.getAgentAccountUsername(), oneTimeCampaign.getId()));
+            } catch (SSLException e) {
+                e.printStackTrace();
+            }
+        });
+        return dtos;
+    }
+
+    @Override
+    public List<AdvertisementDto> getContinuousStoryAdvertisementsOfAgent(String agentUsername, String token) throws SSLException {
+        var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
+        assert user != null;
+        var username = user.getUsername();
+        var userInfo = getUserInfo(username, token);
+        var ageRestrictedCampaigns = continuousCampaignRepository.findAllByDeletedFalseAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqual(userInfo.getAge(), userInfo.getAge());
+        var dtos = new ArrayList<AdvertisementDto>();
+        ageRestrictedCampaigns.forEach(continuousCampaign -> {
+            var advertisement = continuousCampaign.getAdvertisement();
+            try {
+                var followingStatus = getFollowingStatus(continuousCampaign.getAgentAccountUsername(), token);
+                if (continuousCampaign.getAgentAccountUsername().equals(agentUsername) && followingStatus.getFollowing().equals("FOLLOWING") && !advertisement.isPost() && betweenDates(continuousCampaign.getExposureStart(), continuousCampaign.getExposureEnd()) && areGenderEqual(userInfo, continuousCampaign))
+                    dtos.add(new AdvertisementDto(null, advertisement.getContentId(), advertisement.getLink(), continuousCampaign.getAgentAccountUsername(), continuousCampaign.getId()));
+            } catch (SSLException e) {
+                e.printStackTrace();
+            }
+        });
+        return dtos;
+    }
+
+    @Override
+    public List<AdvertisementDto> getOneTimeStoryAdvertisementsOfAgent(AdvertisementDto advertisementDto, String token) throws SSLException {
+        var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
+        var username = user.getUsername();
+        var userInfo = getUserInfo(username, token);
+        var currentMoment = Calendar.getInstance();
+        currentMoment.setTime(advertisementDto.getCurrentMoment());
+        var allAgeRestrictedCampaigns = oneTimeCampaignRepository.
+                findAllByDeletedFalseAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqual(userInfo.getAge(), userInfo.getAge());
+        var dtos = new ArrayList<AdvertisementDto>();
+        allAgeRestrictedCampaigns.forEach(oneTimeCampaign -> {
+            var views = advertisementViewRepository.findAllByUsernameAndCampaignsId(username, oneTimeCampaign.getId());
+            var exposureDate = Calendar.getInstance();
+            exposureDate.setTime(oneTimeCampaign.getExposureDate());
+            var advertisement = oneTimeCampaign.getAdvertisement();
+            try {
+                var followingStatus = getFollowingStatus(oneTimeCampaign.getAgentAccountUsername(), token);
+                if (oneTimeCampaign.getAgentAccountUsername().equals(advertisementDto.getAgentAccountUsername()) && followingStatus.getFollowing().equals("FOLLOWING") && !advertisement.isPost() && views.size() == 0 && isEqualDateInMinutesPrecision(currentMoment, exposureDate) && areGenderEqual(userInfo, oneTimeCampaign))
+                    dtos.add(new AdvertisementDto(advertisementDto.getCurrentMoment(), advertisement.getContentId(), advertisement.getLink(), oneTimeCampaign.getAgentAccountUsername(), oneTimeCampaign.getId()));
+            } catch (SSLException e) {
+                e.printStackTrace();
+            }
+        });
+        return dtos;
+    }
+
+    @Override
+    public List<AdvertisementDto> getContinuousStoryAdvertisementsOfInfluencer(String influencerUsername, String token) throws SSLException {
+        var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
+        assert user != null;
+        var username = user.getUsername();
+        var userInfo = getUserInfo(username, token);
+        var ageRestrictedCampaigns = continuousCampaignRepository.findAllByDeletedFalseAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqual(userInfo.getAge(), userInfo.getAge());
+        var dtos = new ArrayList<AdvertisementDto>();
+        ageRestrictedCampaigns.forEach(continuousCampaign -> {
+            var advertisement = continuousCampaign.getAdvertisement();
+            try {
+                var followingStatus = getFollowingStatus(influencerUsername, token);
+                if (isApprovedByInfluencer(continuousCampaign.getId(), influencerUsername) && followingStatus.getFollowing().equals("FOLLOWING") && !advertisement.isPost() && betweenDates(continuousCampaign.getExposureStart(), continuousCampaign.getExposureEnd()) && areGenderEqual(userInfo, continuousCampaign))
+                    dtos.add(new AdvertisementDto(null, advertisement.getContentId(), advertisement.getLink(), continuousCampaign.getAgentAccountUsername(), continuousCampaign.getId()));
+            } catch (SSLException e) {
+                e.printStackTrace();
+            }
+        });
+        return dtos;
+    }
+
+    @Override
+    public List<AdvertisementDto> getOneTimeStoryAdvertisementsOfInfluencer(AdvertisementDto advertisementDto, String token) throws SSLException {
+        var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
+        var username = user.getUsername();
+        var userInfo = getUserInfo(username, token);
+        var currentMoment = Calendar.getInstance();
+
+        currentMoment.setTime(advertisementDto.getCurrentMoment());
+        var allAgeRestrictedCampaigns = oneTimeCampaignRepository.
+                findAllByDeletedFalseAndMinAgeLessThanEqualAndMaxAgeGreaterThanEqual(userInfo.getAge(), userInfo.getAge());
+        var dtos = new ArrayList<AdvertisementDto>();
+        var influencerUsername = advertisementDto.getAgentAccountUsername();
+        allAgeRestrictedCampaigns.forEach(oneTimeCampaign -> {
+            var views = advertisementViewRepository.findAllByUsernameAndCampaignsId(username, oneTimeCampaign.getId());
+            var exposureDate = Calendar.getInstance();
+            exposureDate.setTime(oneTimeCampaign.getExposureDate());
+            var advertisement = oneTimeCampaign.getAdvertisement();
+            try {
+                var followingStatus = getFollowingStatus(influencerUsername, token);
+                if (isApprovedByInfluencer(oneTimeCampaign.getId(), influencerUsername) && followingStatus.getFollowing().equals("FOLLOWING") && !advertisement.isPost() && !followingStatus.isMuted() && views.size() == 0 && isEqualDateInMinutesPrecision(currentMoment, exposureDate) && areGenderEqual(userInfo, oneTimeCampaign))
                     dtos.add(new AdvertisementDto(advertisementDto.getCurrentMoment(), advertisement.getContentId(), advertisement.getLink(), oneTimeCampaign.getAgentAccountUsername(), oneTimeCampaign.getId()));
             } catch (SSLException e) {
                 e.printStackTrace();
