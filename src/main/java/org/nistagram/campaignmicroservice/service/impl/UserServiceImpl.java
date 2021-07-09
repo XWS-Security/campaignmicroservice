@@ -37,6 +37,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void saveAgent(User user) {
+        if (isUsernameAvailable(user.getUsername())) {
+            List<Role> roles = roleRepository.findByName(user.getAdministrationRole());
+            roles.addAll(roleRepository.findByName("AGENT_ROLE"));
+            user.setRoles(roles);
+            userRepository.save(user);
+        } else {
+            throw new UsernameAlreadyExistsException();
+        }
+    }
+
+    @Override
     public void updateUser(EditUserDto editUserDto) {
         User user = getCurrentlyLoggedUser();
         if (user == null) {
@@ -61,7 +73,7 @@ public class UserServiceImpl implements UserService {
         User tokenOwner = new User();
         tokenOwner.setUsername(tokenOwnerDto.getUsername());
         tokenOwner.setProfilePrivate(agent.isProfilePrivate());
-        tokenOwner.setRoles(roleRepository.findByName(tokenOwner.getAdministrationRole()));
+        tokenOwner.setRoles(roleRepository.findByName("AGENT_ROLE"));
         tokenOwner.setEnabled(true);
         tokenOwner.setConnectedAgentAccount(agent);
         userRepository.save(tokenOwner);
