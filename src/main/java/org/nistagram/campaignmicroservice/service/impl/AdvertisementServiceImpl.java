@@ -7,6 +7,7 @@ import org.nistagram.campaignmicroservice.data.dto.AdvertisementDto;
 import org.nistagram.campaignmicroservice.data.dto.BasicUserInfoDto;
 import org.nistagram.campaignmicroservice.data.dto.FollowingStatusDto;
 import org.nistagram.campaignmicroservice.data.enums.Gender;
+import org.nistagram.campaignmicroservice.data.model.AdvertisementClick;
 import org.nistagram.campaignmicroservice.data.model.AdvertisementView;
 import org.nistagram.campaignmicroservice.data.model.Campaign;
 import org.nistagram.campaignmicroservice.data.repository.*;
@@ -33,18 +34,20 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
     private final CampaignRepository campaignRepository;
     private final ContinuousCampaignRepository continuousCampaignRepository;
     private final HireRequestRepository hireRequestRepository;
+    private final AdvertisementClickRepository advertisementClickRepository;
 
     @Value("${ACCOUNT}")
     private String accountService;
     @Value("${FOLLOWER}")
     private String followerService;
 
-    public AdvertisementServiceImpl(OneTimeCampaignRepository oneTimeCampaignRepository, AdvertisementViewRepository advertisementViewRepository, CampaignRepository campaignRepository, ContinuousCampaignRepository continuousCampaignRepository, HireRequestRepository hireRequestRepository) {
+    public AdvertisementServiceImpl(OneTimeCampaignRepository oneTimeCampaignRepository, AdvertisementViewRepository advertisementViewRepository, CampaignRepository campaignRepository, ContinuousCampaignRepository continuousCampaignRepository, HireRequestRepository hireRequestRepository, AdvertisementClickRepository advertisementClickRepository) {
         this.oneTimeCampaignRepository = oneTimeCampaignRepository;
         this.advertisementViewRepository = advertisementViewRepository;
         this.campaignRepository = campaignRepository;
         this.continuousCampaignRepository = continuousCampaignRepository;
         this.hireRequestRepository = hireRequestRepository;
+        this.advertisementClickRepository = advertisementClickRepository;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
 
 
     @Override
-    public void see(Long id) {
+    public void see(Long id, String contentOwnerUsername) {
         var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
         var campaignOptional = campaignRepository.findById(id);
         if (campaignOptional.isEmpty()) {
@@ -84,7 +87,19 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         }
         var campaign = campaignOptional.get();
         assert user != null;
-        advertisementViewRepository.save(new AdvertisementView(user.getUsername(), campaign));
+        advertisementViewRepository.save(new AdvertisementView(user.getUsername(), campaign, contentOwnerUsername));
+    }
+
+    @Override
+    public void click(Long id, String contentOwnerUsername) {
+        var user = CurrentlyLoggedUserService.getCurrentlyLoggedUser();
+        var campaignOptional = campaignRepository.findById(id);
+        if (campaignOptional.isEmpty()) {
+            throw new NotFoundException(id);
+        }
+        var campaign = campaignOptional.get();
+        assert user != null;
+        advertisementClickRepository.save(new AdvertisementClick(user.getUsername(), campaign, contentOwnerUsername));
     }
 
     @Override
@@ -266,6 +281,19 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         });
         return dtos;
     }
+
+    @Override
+    public AdvertisementDto getAd(Long id) {
+        var opt = campaignRepository.findById(id);
+        if(opt.isEmpty()){
+            throw new NotFoundException(id);
+        }
+        var campaign = opt.get();
+        var advertisement = campaign.getAdvertisement();
+        return new AdvertisementDto(new Date(), advertisement.getContentId(), advertisement.getLink(), campaign.getAgentAccountUsername(), id);
+    }
+
+
 
     private boolean isApprovedByInfluencer(Long campaignId, String influencerUsername) {
         var requests = hireRequestRepository.findAllByInfluencersUsernameCampaignIdAndApproved(influencerUsername, campaignId);

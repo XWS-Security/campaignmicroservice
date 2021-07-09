@@ -25,6 +25,17 @@ public class AdvertisementController {
         this.tokenUtils = tokenUtils;
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<AdvertisementDto> getAd(@PathVariable Long id) {
+        try {
+            AdvertisementDto dto = advertisementService.getAd(id);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping(path = "/hasAds")
     public ResponseEntity<Boolean> hasAdds(@RequestBody AdvertisementDto advertisementDto,HttpServletRequest request) {
         try {
@@ -63,10 +74,21 @@ public class AdvertisementController {
         }
     }
 
-    @PutMapping(path = "/onetime/see/{id}")
-    public ResponseEntity<String> see(@PathVariable Long id) {
+    @PutMapping(path = "/see/{id}/{username}")
+    public ResponseEntity<String> see(@PathVariable Long id, @PathVariable String username) {
         try {
-            advertisementService.see(id);
+            advertisementService.see(id, username);
+            return new ResponseEntity<>("Advertisement " + id + " seen.", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(path = "/click/{id}/{username}")
+    public ResponseEntity<String> click(@PathVariable Long id, @PathVariable String username) {
+        try {
+            advertisementService.click(id, username);
             return new ResponseEntity<>("Advertisement " + id + " seen.", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

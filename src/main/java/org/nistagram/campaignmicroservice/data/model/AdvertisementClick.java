@@ -3,12 +3,12 @@ package org.nistagram.campaignmicroservice.data.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "advertisement_view")
-public class AdvertisementView {
+@Table(name = "advertisement_click")
+public class AdvertisementClick {
 
     @Id
-    @SequenceGenerator(name = "view_sequence_generator", sequenceName = "view_sequence", initialValue = 100)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "view_sequence_generator")
+    @SequenceGenerator(name = "click_sequence_generator", sequenceName = "click_sequence", initialValue = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "click_sequence_generator")
     @Column(name = "id", unique = true)
     private Long id;
 
@@ -22,16 +22,16 @@ public class AdvertisementView {
     @JoinColumn(name = "campaign_id")
     Campaign campaign;
 
-    public AdvertisementView() {
+    public AdvertisementClick() {
     }
 
-    public AdvertisementView(Long id, String username, Campaign campaign) {
+    public AdvertisementClick(Long id, String username, Campaign campaign) {
         this.id = id;
         this.username = username;
         this.campaign = campaign;
     }
 
-    public AdvertisementView(String username, Campaign campaign, String contentOwnerUsername) {
+    public AdvertisementClick(String username, Campaign campaign, String contentOwnerUsername) {
         this.id = id;
         this.username = username;
         this.campaign = campaign;
@@ -61,5 +61,4 @@ public class AdvertisementView {
     public void setCampaign(Campaign campaign) {
         this.campaign = campaign;
     }
-
 }
