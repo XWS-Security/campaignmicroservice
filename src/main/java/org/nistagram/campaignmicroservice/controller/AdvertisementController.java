@@ -37,7 +37,7 @@ public class AdvertisementController {
     }
 
     @GetMapping(path = "/continuous")
-    public ResponseEntity<List<AdvertisementDto>> getUsersContinuousPostAdvertisements(HttpServletRequest request){
+    public ResponseEntity<List<AdvertisementDto>> getUsersContinuousPostAdvertisements(HttpServletRequest request) {
         try {
             List<AdvertisementDto> dtos = advertisementService.getUsersContinuousAdvertisements(tokenUtils.getToken(request));
             return new ResponseEntity<>(dtos, HttpStatus.OK);
@@ -51,7 +51,7 @@ public class AdvertisementController {
     public ResponseEntity<String> see(@PathVariable Long id) {
         try {
             advertisementService.see(id);
-            return new ResponseEntity<>("Advertisement " + id +  " seen.", HttpStatus.OK);
+            return new ResponseEntity<>("Advertisement " + id + " seen.", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -59,9 +59,9 @@ public class AdvertisementController {
     }
 
     @GetMapping(path = "/continuous/profile/{agentUsername}")
-    public ResponseEntity<List<AdvertisementDto>> getContinuousPostAdvertisementsOfAgent(HttpServletRequest request, @PathVariable String agentUsername){
+    public ResponseEntity<List<AdvertisementDto>> getContinuousPostAdvertisementsOfAgent(HttpServletRequest request, @PathVariable String agentUsername) {
         try {
-            List<AdvertisementDto> dtos = advertisementService.getContinuousPostAdvertisementsOfAgent(agentUsername,tokenUtils.getToken(request));
+            List<AdvertisementDto> dtos = advertisementService.getContinuousPostAdvertisementsOfAgent(agentUsername, tokenUtils.getToken(request));
             return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,9 +70,31 @@ public class AdvertisementController {
     }
 
     @PostMapping(path = "/onetime/profile")
-    public ResponseEntity<List<AdvertisementDto>> getOneTimePostAdvertisementsOfAgent(@RequestBody AdvertisementDto advertisementDto,HttpServletRequest request){
+    public ResponseEntity<List<AdvertisementDto>> getOneTimePostAdvertisementsOfAgent(@RequestBody AdvertisementDto advertisementDto, HttpServletRequest request) {
         try {
-            List<AdvertisementDto> dtos = advertisementService.getOneTimePostAdvertisementsOfAgent(advertisementDto,tokenUtils.getToken(request));
+            List<AdvertisementDto> dtos = advertisementService.getOneTimePostAdvertisementsOfAgent(advertisementDto, tokenUtils.getToken(request));
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = "/continuous/influencer/{influencerUsername}")
+    public ResponseEntity<List<AdvertisementDto>> getContinuousPostAdvertisementsOfInfluencer(HttpServletRequest request, @PathVariable String influencerUsername) {
+        try {
+            List<AdvertisementDto> dtos = advertisementService.getContinuousPostAdvertisementsOfInfluencer(influencerUsername, tokenUtils.getToken(request));
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(path = "/onetime/influencer")
+    public ResponseEntity<List<AdvertisementDto>> getOneTimePostAdvertisementsOfInfluencerUsername(@RequestBody AdvertisementDto advertisementDto, HttpServletRequest request) {
+        try {
+            List<AdvertisementDto> dtos = advertisementService.getOneTimePostAdvertisementsOfInfluencer(advertisementDto, tokenUtils.getToken(request));
             return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
