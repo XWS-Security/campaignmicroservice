@@ -2,12 +2,16 @@ package org.nistagram.campaignmicroservice.data.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class GetAgentReportResponse implements Serializable {
     private long campaignId;
+    private long contentId;
     private int likes;
     private int dislikes;
     private int comments;
+    private List<UsernameNumbersDto> clicks;
+    private List<UsernameNumbersDto> views;
     private Date dateStart;
     private Date dateEnd;
     private Date date;
@@ -15,11 +19,14 @@ public class GetAgentReportResponse implements Serializable {
     public GetAgentReportResponse() {
     }
 
-    public GetAgentReportResponse(long campaignId, int likes, int dislikes, int comments) {
+    public GetAgentReportResponse(long campaignId, long contentId, int likes, int dislikes, int comments, List<UsernameNumbersDto> clicks, List<UsernameNumbersDto> views) {
         this.campaignId = campaignId;
+        this.contentId = contentId;
         this.likes = likes;
         this.dislikes = dislikes;
         this.comments = comments;
+        this.clicks = clicks;
+        this.views = views;
     }
 
     public long getCampaignId() {
@@ -76,5 +83,29 @@ public class GetAgentReportResponse implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public List<UsernameNumbersDto> getClicks() {
+        return clicks;
+    }
+
+    public void setClicks(List<UsernameNumbersDto> clicks) {
+        this.clicks = clicks;
+    }
+
+    public List<UsernameNumbersDto> getViews() {
+        return views;
+    }
+
+    public void setViews(List<UsernameNumbersDto> views) {
+        this.views = views;
+    }
+
+    public long getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(long contentId) {
+        this.contentId = contentId;
     }
 }

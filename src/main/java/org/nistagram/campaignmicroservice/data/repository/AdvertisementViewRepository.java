@@ -10,4 +10,6 @@ public interface AdvertisementViewRepository extends CrudRepository<Advertisemen
 
     @Query(value = "SELECT content_owner_username, id, username, campaign_id FROM advertisement_view WHERE username=:username and campaign_id=:campaignId",  nativeQuery = true)
     List<AdvertisementView> findAllByUsernameAndCampaignsId(String username, Long campaignId);
+
+    List<AdvertisementView> findAllByCampaign_Id(Long id);
 }

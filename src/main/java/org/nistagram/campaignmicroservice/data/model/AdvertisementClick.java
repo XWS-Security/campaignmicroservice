@@ -61,4 +61,12 @@ public class AdvertisementClick {
     public void setCampaign(Campaign campaign) {
         this.campaign = campaign;
     }
+
+    public String getContentOwnerUsername() {
+        return contentOwnerUsername;
+    }
+
+    public void setContentOwnerUsername(String contentOwnerUsername) {
+        this.contentOwnerUsername = contentOwnerUsername;
+    }
 }
