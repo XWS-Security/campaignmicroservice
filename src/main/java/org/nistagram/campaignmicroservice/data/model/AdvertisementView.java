@@ -62,4 +62,11 @@ public class AdvertisementView {
         this.campaign = campaign;
     }
 
+    public String getContentOwnerUsername() {
+        return contentOwnerUsername;
+    }
+
+    public void setContentOwnerUsername(String contentOwnerUsername) {
+        this.contentOwnerUsername = contentOwnerUsername;
+    }
 }
